@@ -8,7 +8,7 @@
   (println "Initing stream")
   (a/go-loop [i 0]
     (println "Writing" i)
-    (a/>! event-channel {:data i})
+    (a/>! event-channel {:data (pr-str (repeat (* i i i) (str i)))})
     (a/<! (a/timeout 10))
     (if (< i 10)
       (recur (inc i))

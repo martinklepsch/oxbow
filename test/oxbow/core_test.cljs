@@ -1,5 +1,6 @@
 (ns oxbow.core-test
   (:require [oxbow.core :as o]
+            [clojure.edn :as edn]
             [cljs.test :refer-macros [deftest testing is async]]))
 
 (deftest event-parser-test
@@ -99,7 +100,7 @@
   (async done
          (let [events (atom [])]
            (o/sse-client {:uri "http://localhost:8888/events"
-                          :data-parser js/parseInt
+                          :data-parser edn/read-string
                           :auto-reconnect? false
                           :on-event #(do (js/console.log "got an event" %)
                                          (swap! events conj %))
@@ -116,7 +117,7 @@
                events (atom [])
                abort-fn (atom nil)
                {:keys [abort]} (o/sse-client {:uri "http://localhost:8888/events"
-                                              :data-parser js/parseInt
+                                              :data-parser edn/read-string
                                               :auto-reconnect? true
                                               :reconnect-timeout 100
                                               :on-event #(do (js/console.log "got an event" %)
